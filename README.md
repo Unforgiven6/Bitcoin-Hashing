@@ -1,2 +1,14 @@
 # Bitcoin-Hashing
 Bitcoin hashing using SHA-256 is a cryptographic process that secures transactions on the Bitcoin network. It uses the Secure Hash Algorithm 256-bit to transform an input into a fixed-length, 256-bit (32-byte) string, regardless of the input size.
+
+**Mining:**
+
+In Bitcoin mining, SHA-256 is used in the "proof-of-work" process. Miners repeatedly hash block header data, which includes the previous block hash, timestamp, transaction information, and a random number called a nonce.
+
+**Double Hashing:**
+
+Bitcoin applies SHA-256 twice to the block header to enhance security, a process known as double SHA-256.
+
+**Hash Target:**
+
+The goal is to find a hash that is lower than a target value set by the Bitcoin network. Miners adjust the nonce and hash the data until they find a valid hash, which allows them to add the block to the blockchain and earn a reward.
