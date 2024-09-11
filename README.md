@@ -16,9 +16,10 @@ The goal is to find a hash that is lower than a target value set by the Bitcoin 
 By doing Bitcoin hashing, it ensures the integrity of the blockchain by making it computationally difficult to alter historical data.
 
 
+
 What is a **Blockchain**?
 
-A blockchain is a chain of digital data blocks.
+A blockchain is a _chain of digital data blocks_.
 
 - Each blocks can store digital information about financial transactions such as date, time, dollar, sender, receiver or it can be medical records or property purchase deeds and much more.
 - Chaining of blocks is done through cryptographic hashing algorithms, such as SHA-256, Scrypt, etc.
