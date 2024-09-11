@@ -12,3 +12,5 @@ Bitcoin applies SHA-256 twice to the block header to enhance security, a process
 **Hash Target:**
 
 The goal is to find a hash that is lower than a target value set by the Bitcoin network. Miners adjust the nonce and hash the data until they find a valid hash, which allows them to add the block to the blockchain and earn a reward.
+
+By doing Bitcoin hashing, it ensures the integrity of the blockchain by making it computationally difficult to alter historical data.
