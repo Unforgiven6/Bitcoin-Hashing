@@ -257,16 +257,6 @@ begin
 			 h6 <= h6 + g;
 			 h7 <= h7 + h;
 			 
-			 // Store phase1 output hash for later use at end of in PHASE3_COMPUTE before PHASE2_COMPUTE starts again for next nonce iteration
-			 h0_out_phase1 <= h0 + a;
-			 h1_out_phase1 <= h1 + b;
-			 h2_out_phase1 <= h2 + c;
-			 h3_out_phase1 <= h3 + d;
-			 h4_out_phase1 <= h4 + e;
-			 h5_out_phase1 <= h5 + f;
-			 h6_out_phase1 <= h6 + g;
-			 h7_out_phase1 <= h7 + h;
-			
 			 state <= PHASE3_BLOCK;
 		 end
     end
@@ -378,7 +368,6 @@ begin
   endcase
 
 end
-
 
 assign done = (state == IDLE);
 
