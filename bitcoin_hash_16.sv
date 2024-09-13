@@ -92,7 +92,7 @@ function logic [31:0] rightrotate(input logic [31:0] x,
 endfunction
 
 
-// FSM
+// FSM Implementation
 always_ff @(posedge clk, negedge reset_n)
 begin
   if (!reset_n) begin
@@ -104,24 +104,24 @@ begin
     IDLE: begin 
        if(start) begin
 		  for(int n=0; n<NUM_OF_NONCES; n++) begin
-	       h0[n] <= h0_const;
-		    h1[n] <= h1_const;
-			 h2[n] <= h2_const;
-			 h3[n] <= h3_const;
-			 h4[n] <= h4_const;
-			 h5[n] <= h5_const;
-			 h6[n] <= h6_const;
-			 h7[n] <= h7_const;
+	       		h0[n] <= h0_const;
+			h1[n] <= h1_const;
+			h2[n] <= h2_const;
+			h3[n] <= h3_const;
+			h4[n] <= h4_const;
+			h5[n] <= h5_const;
+			h6[n] <= h6_const;
+			h7[n] <= h7_const;
 			
-			  A[n] <= h0_const;
-			  B[n] <= h1_const;
-			  C[n] <= h2_const;
-			  D[n] <= h3_const;
-			  E[n] <= h4_const;
-			  F[n] <= h5_const;
-			  G[n] <= h6_const;
-			  H[n] <= h7_const;
-			end
+			A[n] <= h0_const;
+			B[n] <= h1_const;
+			C[n] <= h2_const;
+			D[n] <= h3_const;
+			E[n] <= h4_const;
+			F[n] <= h5_const;
+			G[n] <= h6_const;
+			H[n] <= h7_const;
+		 end
 			
 			cur_addr <= message_addr;
 			offset <= 0;
@@ -166,19 +166,19 @@ begin
 
     PHASE1_COMPUTE: begin
        if (i <= 64) begin
-			if(i<16) begin
-				{A[0],B[0],C[0],D[0],E[0],F[0],G[0],H[0]} <= sha256_op(A[0],B[0],C[0],D[0],E[0],F[0],G[0],H[0],w[0][i],i);
-         end
+		if(i<16) begin
+			{A[0],B[0],C[0],D[0],E[0],F[0],G[0],H[0]} <= sha256_op(A[0],B[0],C[0],D[0],E[0],F[0],G[0],H[0],w[0][i],i);
+         	end
          else begin
             for (int n = 0; n < 15; n++) w[0][n] <= w[0][n+1];
-				w[0][15] <= wtnew(0, 16); // Perform word expansion 
-				if (i != 16) begin
-					{A[0],B[0],C[0],D[0],E[0],F[0],G[0],H[0]} <= sha256_op(A[0],B[0],C[0],D[0],E[0],F[0],G[0],H[0],w[0][15],i-1);
-				end
-			end
+		w[0][15] <= wtnew(0, 16); // Perform word expansion 
+		if (i != 16) begin
+			{A[0],B[0],C[0],D[0],E[0],F[0],G[0],H[0]} <= sha256_op(A[0],B[0],C[0],D[0],E[0],F[0],G[0],H[0],w[0][15],i-1);
+		end
+	end
 	  
-         i <= i + 1;
-	      state <= PHASE1_COMPUTE;
+        i <= i + 1;
+	state <= PHASE1_COMPUTE;
        end
        else begin
 		   
@@ -209,33 +209,33 @@ begin
 	 PHASE2_BLOCK: begin
 	    // Fill in w[0] tp w[16] with message words, nonce and padding bits, message, size
 		for (int m = 0; m < NUM_OF_NONCES; m++) begin 
-		 for (int n = 0; n < 3; n++) w[m][n] <= message[16 + n];
-		 w[m][3] <= m;
-		 w[m][4] <= 32'h80000000;
-		 for (int n = 5; n < 15; n++) w[m][n] <= 32'h00000000;
-		 w[m][15] <= 32'd640;
+			for (int n = 0; n < 3; n++) w[m][n] <= message[16 + n];
+			w[m][3] <= m;
+			w[m][4] <= 32'h80000000;
+		 	for (int n = 5; n < 15; n++) w[m][n] <= 32'h00000000;
+			w[m][15] <= 32'd640;
 		end
 
        // Initialize a through h using h0 to h7 which was generated from PHASE1_COMPUTE
 		for(int n=0; n<NUM_OF_NONCES; n++) begin
-		 h0[n] <= h0_out_phase1;
-		 h1[n] <= h1_out_phase1;
-		 h2[n] <= h2_out_phase1;
-		 h3[n] <= h3_out_phase1;
-		 h4[n] <= h4_out_phase1;
-		 h5[n] <= h5_out_phase1;
-		 h6[n] <= h6_out_phase1;
-		 h7[n] <= h7_out_phase1;
+			h0[n] <= h0_out_phase1;
+			h1[n] <= h1_out_phase1;
+			h2[n] <= h2_out_phase1;
+			h3[n] <= h3_out_phase1;
+			h4[n] <= h4_out_phase1;
+			h5[n] <= h5_out_phase1;
+			h6[n] <= h6_out_phase1;
+			h7[n] <= h7_out_phase1;
 		 
-		 A[n] <= h0_out_phase1;
-		 B[n] <= h1_out_phase1;
-		 C[n] <= h2_out_phase1;
-		 D[n] <= h3_out_phase1;
-		 E[n] <= h4_out_phase1;
-		 F[n] <= h5_out_phase1;
-		 G[n] <= h6_out_phase1;
-		 H[n] <= h7_out_phase1;
-      end		
+			A[n] <= h0_out_phase1;
+			B[n] <= h1_out_phase1;
+			C[n] <= h2_out_phase1;
+			D[n] <= h3_out_phase1;
+			E[n] <= h4_out_phase1;
+			F[n] <= h5_out_phase1;
+			G[n] <= h6_out_phase1;
+			H[n] <= h7_out_phase1;
+      		end		
 		i <= 0;
 		state <= PHASE2_COMPUTE;
 	 end
@@ -243,43 +243,42 @@ begin
 	 PHASE2_COMPUTE: begin
 	    // similar code as PHASE1_COMPUTE
        if (i <= 64) begin
-			if(i<16) begin 
-            for (int n = 0; n < NUM_OF_NONCES; n++) begin
-					{A[n],B[n],C[n],D[n],E[n],F[n],G[n],H[n]} <= sha256_op(A[n],B[n],C[n],D[n],E[n],F[n],G[n],H[n],w[n][i],i);
-				end
-         end
-         else begin
-			   for (int m = 0; m < NUM_OF_NONCES; m++) begin
-             for (int n = 0; n < 15; n++) w[m][n] <= w[m][n+1];
-				 w[m][15] <= wtnew(m, 16); // Perform word expansion 
-				 if (i != 16) begin
-					{A[m],B[m],C[m],D[m],E[m],F[m],G[m],H[m]} <= sha256_op(A[m],B[m],C[m],D[m],E[m],F[m],G[m],H[m],w[m][15],i-1);
-				 end
-				end
-         end
+		if(i<16) begin 
+            		for (int n = 0; n < NUM_OF_NONCES; n++) begin
+				{A[n],B[n],C[n],D[n],E[n],F[n],G[n],H[n]} <= sha256_op(A[n],B[n],C[n],D[n],E[n],F[n],G[n],H[n],w[n][i],i);
+			end
+         	end
+         	else begin
+			for (int m = 0; m < NUM_OF_NONCES; m++) begin
+             		for (int n = 0; n < 15; n++) w[m][n] <= w[m][n+1];
+			w[m][15] <= wtnew(m, 16); // Perform word expansion 
+			if (i != 16) begin
+				{A[m],B[m],C[m],D[m],E[m],F[m],G[m],H[m]} <= sha256_op(A[m],B[m],C[m],D[m],E[m],F[m],G[m],H[m],w[m][15],i-1);
+			end
+		end
+        end
 			
-         i <= i + 1;
-	      state <= PHASE2_COMPUTE;
+        i <= i + 1;
+	state <= PHASE2_COMPUTE;
        end
        else begin
-		  for(int n=0; n<NUM_OF_NONCES; n++) begin
-			 h0[n] <= h0[n] + A[n];
-			 h1[n] <= h1[n] + B[n];
-			 h2[n] <= h2[n] + C[n];
-			 h3[n] <= h3[n] + D[n];
-			 h4[n] <= h4[n] + E[n];
-			 h5[n] <= h5[n] + F[n];
-			 h6[n] <= h6[n] + G[n];
-			 h7[n] <= h7[n] + H[n];
-		 end
-			 
-			 state <= PHASE3_BLOCK;
+		for(int n=0; n<NUM_OF_NONCES; n++) begin
+			h0[n] <= h0[n] + A[n];
+			h1[n] <= h1[n] + B[n];
+			h2[n] <= h2[n] + C[n];
+			h3[n] <= h3[n] + D[n];
+			h4[n] <= h4[n] + E[n];
+			h5[n] <= h5[n] + F[n];
+			h6[n] <= h6[n] + G[n];
+			h7[n] <= h7[n] + H[n];
 		end
-    end
+			state <= PHASE3_BLOCK;
+		end
+       end
 
-	 PHASE3_BLOCK: begin
-	  // Fill in w[m][0] <= h0[m] to w[m][7] <= h7[m]
-	  for (int m = 0; m < NUM_OF_NONCES; m++) begin 
+	PHASE3_BLOCK: begin
+	// Fill in w[m][0] <= h0[m] to w[m][7] <= h7[m]
+	for (int m = 0; m < NUM_OF_NONCES; m++) begin 
 		w[m][0] <= h0[m];
 		w[m][1] <= h1[m];
 		w[m][2] <= h2[m];
@@ -301,78 +300,78 @@ begin
 		F[m] <= h5_const;
 		G[m] <= h6_const;
 		H[m] <= h7_const;
-	  end
-	  i <= 0;
-	  state <= PHASE3_COMPUTE;
-	 end
+	end
+	i <= 0;
+	state <= PHASE3_COMPUTE;
+	end
 	 
 	PHASE3_COMPUTE: begin
-		  if (i <= 64) begin
+		if (i <= 64) begin
 			if(i<16) begin 
-            for (int n = 0; n < NUM_OF_NONCES; n++) begin
+            			for (int n = 0; n < NUM_OF_NONCES; n++) begin
 					{A[n],B[n],C[n],D[n],E[n],F[n],G[n],H[n]} <= sha256_op(A[n],B[n],C[n],D[n],E[n],F[n],G[n],H[n],w[n][i],i);
 				end
-         end
-         else begin
-			   for (int m = 0; m < NUM_OF_NONCES; m++) begin
-             for (int n = 0; n < 15; n++) w[m][n] <= w[m][n+1];
-				 w[m][15] <= wtnew(m, 16); // Perform word expansion 
-				 if (i != 16) begin
+         		end
+         		else begin
+				for (int m = 0; m < NUM_OF_NONCES; m++) begin
+             			for (int n = 0; n < 15; n++) w[m][n] <= w[m][n+1];
+				w[m][15] <= wtnew(m, 16); // Perform word expansion 
+				if (i != 16) begin
 					{A[m],B[m],C[m],D[m],E[m],F[m],G[m],H[m]} <= sha256_op(A[m],B[m],C[m],D[m],E[m],F[m],G[m],H[m],w[m][15],i-1);
-				 end
 				end
-         end
+			end
+         	end
 			
-         i <= i + 1;
-	      state <= PHASE3_COMPUTE;
-       end
-		 else begin
-		   for(int n=0; n<NUM_OF_NONCES; n++) begin
-		    h0_out[n] <= h0_const + A[n];
-			 h1_out[n] <= h1_const + B[n];
-			 h2_out[n] <= h2_const + C[n];
-			 h3_out[n] <= h3_const + D[n];
-			 h4_out[n] <= h4_const + E[n];
-			 h5_out[n] <= h5_const + F[n];
-			 h6_out[n] <= h6_const + G[n];
-			 h7_out[n] <= h7_const + H[n];
+         	i <= i + 1;
+	      	state <= PHASE3_COMPUTE;
+	end
+	else begin
+		for(int n=0; n<NUM_OF_NONCES; n++) begin
+			h0_out[n] <= h0_const + A[n];
+			h1_out[n] <= h1_const + B[n];
+			h2_out[n] <= h2_const + C[n];
+			h3_out[n] <= h3_const + D[n];
+			h4_out[n] <= h4_const + E[n];
+			h5_out[n] <= h5_const + F[n];
+			h6_out[n] <= h6_const + G[n];
+			h7_out[n] <= h7_const + H[n];
 			 
-			 // Transition state to PHASE2_BLOCK STATE
-			 state <= PHASE2_BLOCK;
-			 end
-			 // Transition state to WRITE STATE
-			 i <= 0;
-			 state <= WRITE;
-		  end
+			// Transition state to PHASE2_BLOCK STATE
+			state <= PHASE2_BLOCK;
+			end
+			// Transition state to WRITE STATE
+			i <= 0;
+			state <= WRITE;
+		end
 	end
  
 				
 	WRITE: begin
 	   if (i <= 15) begin 
 		// Write h0_out[0], h0_out[1], h0_out[2] to h0_out[15] to testbench memory
-			i <= i + 1;
-			offset <= i;
-			cur_we <= 1'b1;
-			cur_addr <= output_addr;
-			cur_write_data <= (i == 0) ? h0_out[0]:
-			(i == 1) ? h0_out[1]:
-			(i == 2) ? h0_out[2]:
-			(i == 3) ? h0_out[3]:
-			(i == 4) ? h0_out[4]:
-			(i == 5) ? h0_out[5]:
-			(i == 6) ? h0_out[6]:
-			(i == 7) ? h0_out[7]:
-			(i == 8) ? h0_out[8]:
-			(i == 9) ? h0_out[9]:
-			(i == 10) ? h0_out[10]:
-			(i == 11) ? h0_out[11]:
-			(i == 12) ? h0_out[12]:
-			(i == 13) ? h0_out[13]:
-			(i == 14) ? h0_out[14]: h0_out[15];
+		i <= i + 1;
+		offset <= i;
+		cur_we <= 1'b1;
+		cur_addr <= output_addr;
+		cur_write_data <= (i == 0) ? h0_out[0]:
+		(i == 1) ? h0_out[1]:
+		(i == 2) ? h0_out[2]:
+		(i == 3) ? h0_out[3]:
+		(i == 4) ? h0_out[4]:
+		(i == 5) ? h0_out[5]:
+		(i == 6) ? h0_out[6]:
+		(i == 7) ? h0_out[7]:
+		(i == 8) ? h0_out[8]:
+		(i == 9) ? h0_out[9]:
+		(i == 10) ? h0_out[10]:
+		(i == 11) ? h0_out[11]:
+		(i == 12) ? h0_out[12]:
+		(i == 13) ? h0_out[13]:
+		(i == 14) ? h0_out[14]: h0_out[15];
 			
-			state <= WRITE;
+		state <= WRITE;
 	   end else begin
-			state <= IDLE;
+		state <= IDLE;
 	   end
 	end
   endcase
