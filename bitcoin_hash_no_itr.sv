@@ -336,9 +336,7 @@ begin
 			h5_out[n] <= h5_const + F[n];
 			h6_out[n] <= h6_const + G[n];
 			h7_out[n] <= h7_const + H[n];
-			 
-			// Transition state to PHASE2_BLOCK STATE
-			state <= PHASE2_BLOCK;
+			
 			end
 			// Transition state to WRITE STATE
 			i <= 0;
