@@ -1,3 +1,4 @@
+// Bitcoin Hashing for 16 nonces at once
 module bitcoin_hash_16(input logic        clk, reset_n, start,
                     input logic [15:0] message_addr, output_addr,
                     output logic        done, mem_clk, mem_we,
