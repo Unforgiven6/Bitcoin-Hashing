@@ -305,18 +305,19 @@ begin
 				if (i != 16) {a,b,c,d,e,f,g,h} <= sha256_op(a, b, c, d, e, f, g, h, w[15], i-1);
          end
 			i <= i + 1;
+			state <= PHASE3_COMPUTE;
         end
 		  else begin
-		    h0_out[nonce_value] <= h0_const + a;
-			 h1_out[nonce_value] <= h1_const + b;
-			 h2_out[nonce_value] <= h2_const + c;
-			 h3_out[nonce_value] <= h3_const + d;
-			 h4_out[nonce_value] <= h4_const + e;
-			 h5_out[nonce_value] <= h5_const + f;
-			 h6_out[nonce_value] <= h6_const + g;
-			 h7_out[nonce_value] <= h7_const + h;
+			h0_out[nonce_value] <= h0_const + a;
+			h1_out[nonce_value] <= h1_const + b;
+			h2_out[nonce_value] <= h2_const + c;
+			h3_out[nonce_value] <= h3_const + d;
+			h4_out[nonce_value] <= h4_const + e;
+			h5_out[nonce_value] <= h5_const + f;
+			h6_out[nonce_value] <= h6_const + g;
+			h7_out[nonce_value] <= h7_const + h;
 			 
-			 if(nonce_value < 16) begin
+			if(nonce_value < 16) begin
 			    nonce_value <= nonce_value + 1;
 				
 				// Restore phase1 hash output to h0 to h7 as a starting input hash value for PHASE2_BLOCK and PHASE2_COMPUTE for next nonce value iteration
@@ -337,7 +338,7 @@ begin
 			   	state <= WRITE;
 			 end
 		end
-    end
+    	end
 				
 	WRITE: begin
 	   if (i <= 15) begin 
