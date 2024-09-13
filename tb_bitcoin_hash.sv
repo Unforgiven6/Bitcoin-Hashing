@@ -1,3 +1,4 @@
+// Simple testbench for all Bitcoin hashing algorithms
 module tb_bitcoin_hash();
 
 parameter NUM_NONCES = 16;
