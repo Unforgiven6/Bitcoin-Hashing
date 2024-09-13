@@ -1,10 +1,10 @@
-// Bitcoin Hashing without iterations (possibly limited by FPGAs)
+// Bitcoin Hashing without iterations for parallel implementation (possibly limited by FPGAs)
 module bitcoin_hash_no_itr(input logic        clk, reset_n, start,
-                    input logic [15:0] message_addr, output_addr,
-                    output logic        done, mem_clk, mem_we,
-                    output logic [15:0] mem_addr,
-                    output logic [31:0] mem_write_data,
-                    input logic [31:0] mem_read_data);
+                    	input logic [15:0] message_addr, output_addr,
+                    	output logic        done, mem_clk, mem_we,
+                    	output logic [15:0] mem_addr,
+                    	output logic [31:0] mem_write_data,
+                    	input logic [31:0] mem_read_data);
 
 // Number of NONCES
 parameter integer NUM_OF_NONCES=16;
