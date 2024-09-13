@@ -48,7 +48,7 @@ In a serial implementation, the hash function (SHA-256) is applied one step at a
 
 ![Screenshot 2024-09-12 224855](https://github.com/user-attachments/assets/75cce849-5faa-44e0-826f-4159b2cb3ac7)
 
-In a parallel implementation, multiple instances of the hash function are computed simultaneously. This can be done using hardware (e.g., ASICs, GPUs, or FPGAs) or software threads running in parallel on multicore processors.
+In a parallel implementation, multiple instances of the hash function are computed simultaneously. This can be done using hardware (e.g., ASICs, GPUs, or FPGAs) or software threads running in parallel on multicore processors. To Perform 16 SHA256 operations in parallel, 16 copies of SHA256 logic is required and this will consume more logic within FPGA.
 
 1. **Multiple nonces:** Several different nonces are tried simultaneously, each processed by a separate thread or processing core.
 2. **Parallel hashing:** The SHA-256 hashing (double SHA-256) is computed in parallel for each nonce.
@@ -61,3 +61,9 @@ In a parallel implementation, multiple instances of the hash function are comput
 - **Hardware acceleration:** Parallel implementations often use GPUs, FPGAs, or ASICs, which are optimized for the SHA-256 hashing process.
 - **High resource usage:** Parallel implementations require more power and resources due to the use of specialized hardware and more processing cores.
 - **Mining farms:** Bitcoin miners typically use parallel implementations across large arrays of ASICs in mining farms to maximize the chances of finding the correct hash.
+
+**16 Nonces vs 8 Nonces**
+
+Arria-II FPGA will not able to fit 16 instances of SHA256. To solve this, first perform in parallel implementation of SHA256 for nonce 0 to 7 and then re-use same logic and one more time perform SHA256 operation in parallel for nonce 8 to 16. This will required 8 instances of SHA256.
+
+In the files, 'bitcoin_hashing_no_itr' has codes for no iterations in SHA256 operations, and 'bitcoin_hashing_itr' has iterations which will work for most FPGA models.
