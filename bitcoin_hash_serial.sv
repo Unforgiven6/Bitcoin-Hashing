@@ -8,7 +8,7 @@ module bitcoin_hash_serial(input logic        clk, reset_n, start,
 // Number of NONCES
 parameter integer NUM_OF_NONCES=16;
 
-//Local Variables
+// Local Variables
 logic [31:0] w[16];
 logic [31:0] message[20];
 logic [31:0] a, b, c, d, e, f, g, h;
@@ -94,7 +94,7 @@ function logic [31:0] rightrotate(input logic [31:0] x,
 endfunction
 
 
-// Trying to Implement State Machine
+// FSM Implementation
 always_ff @(posedge clk, negedge reset_n)
 begin
   if (!reset_n) begin
@@ -168,7 +168,7 @@ begin
     PHASE1_COMPUTE: begin
        if (i <= 64) begin
       
-	      // Add similar code as in COMPUTE FSM state in simplified_sha256 FSM
+	      // Similar code to COMPUTE FSM state in SHA_256 FSM
 			if(i<16) begin 
             {a,b,c,d,e,f,g,h} <= sha256_op(a, b, c, d, e, f, g, h, w[i], i);
          end
@@ -206,19 +206,19 @@ begin
     end
 		
 	 PHASE2_BLOCK: begin
-	    // Add code to Fill in w[0] tp w[16] with message words, nonce and padding bits, message, size
-		//w[0] to w[2] using message[16] to message[18]
-		//w[3] <= nonce_value;
-		//w[4] <= 32'h80000000;
-		//w[5] to w[14] to 0
-		//w[15] = 32'd640;
+	    	// Fill in w[0] tp w[16] with message words, nonce and padding bits, message, size
+		// w[0] to w[2] using message[16] to message[18]
+		// w[3] <= nonce_value;
+		// w[4] <= 32'h80000000;
+		// w[5] to w[14] to 0
+		// w[15] <= 32'd640;
 		for (int n = 0; n < 3; n++) w[n] <= message[16 + n];
 		w[3] <= nonce_value;
 		w[4] <= 32'h80000000;
 		for (int n = 5; n < 15; n++) w[n] <= 32'h00000000;
 		w[15] <= 32'd640;
 
-      // Initialize a through h using h0 to h7 which was generated from PHASE1_COMPUTE
+      		// Initialize a through h using h0 to h7 which was generated from PHASE1_COMPUTE
 		a <= h0;
 		b <= h1;
 		c <= h2;
@@ -233,8 +233,8 @@ begin
 	 end
 	 
 	 PHASE2_COMPUTE: begin
-	    // similar code as PHASE1_COMPUTE
-       if (i <= 64) begin
+	 // Similar code as PHASE1_COMPUTE
+      	 if (i <= 64) begin
 			if(i<16) begin 
             {a,b,c,d,e,f,g,h} <= sha256_op(a, b, c, d, e, f, g, h, w[i], i);
          end
@@ -248,7 +248,7 @@ begin
 	      state <= PHASE2_COMPUTE;
        end
        else begin
-	       // Add similar code from PHASE1_COMPUTE
+	       		 // Similar code from PHASE1_COMPUTE
 			 h0 <= h0 + a;
 			 h1 <= h1 + b;
 			 h2 <= h2 + c;
@@ -263,8 +263,8 @@ begin
     end
 
 	 PHASE3_BLOCK: begin
-	   // Add code to fill in w[0] <= h0 to w[7] <=h7
-		// Fill in w[8] = 32'h80000000;
+	  	// Fill in w[0] <= h0 to w[7] <=h7
+		// w[8] = 32'h80000000;
 		// w[9] to w[14] to 0
 		// w[15] = 32'd256;
 		w[0] <= h0;
@@ -279,7 +279,7 @@ begin
 		for (int n = 9; n < 15; n++) w[n] <= 32'h00000000;
 		w[15] <= 32'd256;
 		
-		// Add code to initiatlize a through h with initial hash constants h0_const to h7_const
+		// Initiatlize a through h with initial hash constants h0_const to h7_const
 		a <= h0_const;
 		b <= h1_const;
 		c <= h2_const;
@@ -295,7 +295,7 @@ begin
 	 
 	 PHASE3_COMPUTE: begin
 		if (i <= 64) begin
-		  // Add similar code as in PHASE1_COMPUTE or PHASE2_COMPUTE
+		  // Similar code as in PHASE1_COMPUTE or PHASE2_COMPUTE
 		  if(i < 16) begin 
             {a,b,c,d,e,f,g,h} <= sha256_op(a, b, c, d, e, f, g, h, w[i], i);
          end
@@ -319,8 +319,8 @@ begin
 			 if(nonce_value < 16) begin
 			    nonce_value <= nonce_value + 1;
 				
-				// Add code to Restore phase1 hash output to h0 to h7 as a starting input hash value for PHASE2_BLOCK and PHASE2_COMPUTE for next nonce value iteration
-			   h0 <= h0_out_phase1;
+				// Restore phase1 hash output to h0 to h7 as a starting input hash value for PHASE2_BLOCK and PHASE2_COMPUTE for next nonce value iteration
+			  	h0 <= h0_out_phase1;
 				h1 <= h1_out_phase1;
 				h2 <= h2_out_phase1;
 				h3 <= h3_out_phase1;
@@ -329,12 +329,12 @@ begin
 				h6 <= h6_out_phase1;
 				h7 <= h7_out_phase1;
 				
-			   // Add code to Transition state to PHASE2_BLOCK STATE
+			   // Transition state to PHASE2_BLOCK STATE
 			   state <= PHASE2_BLOCK;
 			 end else begin
-			   // Add code to Transition state to WRITE STATE
+			   	// Transition state to WRITE STATE
 				i <= 0;
-			   state <= WRITE;
+			   	state <= WRITE;
 			 end
 		end
     end
