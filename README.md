@@ -66,4 +66,4 @@ In a parallel implementation, multiple instances of the hash function are comput
 
 Arria-II FPGA will not able to fit 16 instances of SHA256. To solve this, first perform in parallel implementation of SHA256 for nonce 0 to 7 and then re-use same logic and one more time perform SHA256 operation in parallel for nonce 8 to 16. This will required 8 instances of SHA256.
 
-In the files, 'bitcoin_hashing_no_itr' has codes for no iterations in SHA256 operations, and 'bitcoin_hashing_itr' has iterations which will work for most FPGA models.
+In the files, `bitcoin_hashing_no_itr.sv` has codes for no iterations in SHA256 operations, and `bitcoin_hashing_itr.sv` has iterations which will work for most FPGA models.
