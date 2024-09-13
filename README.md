@@ -21,7 +21,7 @@ A blockchain is a _chain of digital data blocks_.
 
 - Each blocks can store digital information about financial transactions such as date, time, dollar, sender, receiver or it can be medical records or property purchase deeds and much more.
 - Chaining of blocks is done through cryptographic hashing algorithms, such as SHA-256, Scrypt, etc.
-- Blocks which are chained together, its data can never be changed again (Immutable !).
+- Blocks which are chained together, its data can never be changed again (Immutable!).
 - Entire block chain is publicly available to anyone who wants to see it, in exactly the way it was once added to the blockchain.
 - Blockchain is a distributed and decentralized public ledger. 
 
