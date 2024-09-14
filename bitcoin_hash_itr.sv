@@ -23,7 +23,6 @@ logic [15:0] offset;
 logic        cur_we;
 logic [15:0] cur_addr;
 logic [31:0] cur_write_data;
-logic [31:0] nonce_value;
 
 
 // FSM state variables 
@@ -133,7 +132,6 @@ begin
 			offset <= 0;
 			i <= 0;
 			cur_we <= 1'b0;
-			nonce_value <= 32'b0;
 			state <= READ;
        end
     end
@@ -190,35 +188,35 @@ begin
 	       state <= PHASE1_COMPUTE;
        end
        else begin
-		    h0[0] <= h0[0] + a[0];
-			 h1[0] <= h1[0] + b[0];
-			 h2[0] <= h2[0] + c[0];
-			 h3[0] <= h3[0] + d[0];
-			 h4[0] <= h4[0] + e[0];
-			 h5[0] <= h5[0] + f[0];
-			 h6[0] <= h6[0] + g[0];
-			 h7[0] <= h7[0] + h[0];
+		h0[0] <= h0[0] + a[0];
+		h1[0] <= h1[0] + b[0];
+		h2[0] <= h2[0] + c[0];
+		h3[0] <= h3[0] + d[0];
+		h4[0] <= h4[0] + e[0];
+		h5[0] <= h5[0] + f[0];
+		h6[0] <= h6[0] + g[0];
+		h7[0] <= h7[0] + h[0];
 			 
-			 // Store phase1 output hash for later use at end of in PHASE3_COMPUTE before PHASE2_COMPUTE starts again for next nonce iteration
-			 h0_out_phase1 <= h0[0] + a[0];
-			 h1_out_phase1 <= h1[0] + b[0];
-			 h2_out_phase1 <= h2[0] + c[0];
-			 h3_out_phase1 <= h3[0] + d[0];
-			 h4_out_phase1 <= h4[0] + e[0];
-			 h5_out_phase1 <= h5[0] + f[0];
-			 h6_out_phase1 <= h6[0] + g[0];
-			 h7_out_phase1 <= h7[0] + h[0];
+		// Store phase1 output hash for later use at end of in PHASE3_COMPUTE before PHASE2_COMPUTE starts again for next nonce iteration
+		h0_out_phase1 <= h0[0] + a[0];
+		h1_out_phase1 <= h1[0] + b[0];
+		h2_out_phase1 <= h2[0] + c[0];
+		h3_out_phase1 <= h3[0] + d[0];
+		h4_out_phase1 <= h4[0] + e[0];
+		h5_out_phase1 <= h5[0] + f[0];
+		h6_out_phase1 <= h6[0] + g[0];
+		h7_out_phase1 <= h7[0] + h[0];
 			 
-			 state <= PHASE2_BLOCK;
-		 end
+		state <= PHASE2_BLOCK;
+	end
     end
 		
 	 PHASE2_BLOCK: begin
 	   // Within for loop with m=0 and m<NUM_OF_NONCES Add code to Fill in w[m][0] to w[m][16] with message words, nonce and padding bits, message, size
 		for(int m=0; m<NUM_OF_NONCES; m++) begin
 		// w[m][0] to w[m][2] using message[16] to message[18]
-	   // Check if itr == 0 then w[m][3] <= m else  w[m][3] <= m + NUM_OF_NONCES;
-     	// w[m][4] <= 32'h80000000;
+	   	// Check if itr == 0 then w[m][3] <= m else  w[m][3] <= m + NUM_OF_NONCES;
+     		// w[m][4] <= 32'h80000000;
 		// w[m][5] to w[m][15] to 0
 		// w[m][15] = 32'd640;
 			for (int n = 0; n < 3; n++) w[m][n] <= message[16 + n];
@@ -233,7 +231,7 @@ begin
 		end
 
         for(int m=0; m<NUM_OF_NONCES; m++) begin
-        // Initialize a through h using h0 to h7 which was generated from PHASE1_COMPUTE		
+        	 // Initialize a through h using h0 to h7 which was generated from PHASE1_COMPUTE		
 		 a[m] <= h0_out_phase1;
 		 b[m] <= h1_out_phase1;
 		 c[m] <= h2_out_phase1;
@@ -252,18 +250,17 @@ begin
 		 h5[m] <= h5_out_phase1;
 		 h6[m] <= h6_out_phase1;
 		 h7[m] <= h7_out_phase1;
-		end
+	end
 		
 		i <= 0;
 		state <= PHASE2_COMPUTE;
 	 end
 	 
-	 PHASE2_COMPUTE: begin
-       if (i <= 64) begin
-
-		   if (i < 16) begin
+	PHASE2_COMPUTE: begin
+		if (i <= 64) begin
+			if (i < 16) begin
 				for (int m = 0; m < NUM_OF_NONCES; m++) begin
-						{a[m],b[m],c[m],d[m],e[m],f[m],g[m],h[m]} <= sha256_op(a[m],b[m],c[m],d[m],e[m],f[m],g[m],h[m],w[m][i],i);
+					{a[m],b[m],c[m],d[m],e[m],f[m],g[m],h[m]} <= sha256_op(a[m],b[m],c[m],d[m],e[m],f[m],g[m],h[m],w[m][i],i);
 				end
 			end else begin
 
@@ -274,10 +271,10 @@ begin
 					if (i != 16) {a[m],b[m],c[m],d[m],e[m],f[m],g[m],h[m]} <= sha256_op(a[m],b[m],c[m],d[m],e[m],f[m],g[m],h[m],w[m][15],i-1);
 				end
 			end
-         i <= i + 1;
-	      state <= PHASE2_COMPUTE;
-       end
-       else begin
+         		i <= i + 1;
+			state <= PHASE2_COMPUTE;
+       		end
+		else begin
 			 for (int m = 0; m < NUM_OF_NONCES; m++) begin
 				h0[m] <= h0[m] + a[m];
 				h1[m] <= h1[m] + b[m];
@@ -290,8 +287,8 @@ begin
 			 end
 			
 			 state <= PHASE3_BLOCK;
-		 end
-    end
+		end
+    	end
 
 	 PHASE3_BLOCK: begin
 	 
@@ -327,15 +324,13 @@ begin
 		state <= PHASE3_COMPUTE;
 	 end
 	 
-	 PHASE3_COMPUTE: begin
+	PHASE3_COMPUTE: begin
 		if (i <= 64) begin
-
-		  if (i < 16) begin
+			if (i < 16) begin
 				for (int m = 0; m < NUM_OF_NONCES; m++) begin
-						{a[m],b[m],c[m],d[m],e[m],f[m],g[m],h[m]} <= sha256_op(a[m],b[m],c[m],d[m],e[m],f[m],g[m],h[m],w[m][i],i);
+					{a[m],b[m],c[m],d[m],e[m],f[m],g[m],h[m]} <= sha256_op(a[m],b[m],c[m],d[m],e[m],f[m],g[m],h[m],w[m][i],i);
 				end
 			end else begin
-
 				for(int m = 0; m < NUM_OF_NONCES; m++) begin
 					for (int n = 0; n < 15; n++) w[m][n] <= w[m][n+1];
 
@@ -343,29 +338,28 @@ begin
 					if (i != 16) {a[m],b[m],c[m],d[m],e[m],f[m],g[m],h[m]} <= sha256_op(a[m],b[m],c[m],d[m],e[m],f[m],g[m],h[m],w[m][15],i-1);
 				end
 			end
-		 i <= i + 1;
-	    state <= PHASE3_COMPUTE;
+		 	i <= i + 1;
+	    		state <= PHASE3_COMPUTE;
 		end else begin
-		
 		     for(int m=0; m<NUM_OF_NONCES; m++) begin
 			  if(itr == 0) begin // This is for nonce 0 to nonce 7
-		       h0_out[m] <= h0_const + a[m];
-			    h1_out[m] <= h1_const + b[m];
-				 h2_out[m] <= h2_const + c[m];
-				 h3_out[m] <= h3_const + d[m];
-				 h4_out[m] <= h4_const + e[m];
-				 h5_out[m] <= h5_const + f[m];
-				 h6_out[m] <= h6_const + g[m];
-			    h7_out[m] <= h7_const + h[m];
+		      	 	h0_out[m] <= h0_const + a[m];
+			    	h1_out[m] <= h1_const + b[m];
+				h2_out[m] <= h2_const + c[m];
+				h3_out[m] <= h3_const + d[m];
+				h4_out[m] <= h4_const + e[m];
+				h5_out[m] <= h5_const + f[m];
+				h6_out[m] <= h6_const + g[m];
+			    	h7_out[m] <= h7_const + h[m];
 			 end else begin  // This is for nonce 8 to nonce 15 
-			    h0_out[m+NUM_OF_NONCES] <= h0_const + a[m];
-			    h1_out[m+NUM_OF_NONCES] <= h1_const + b[m];
-				 h2_out[m+NUM_OF_NONCES] <= h2_const + c[m];
-				 h3_out[m+NUM_OF_NONCES] <= h3_const + d[m];
-				 h4_out[m+NUM_OF_NONCES] <= h4_const + e[m];
-				 h5_out[m+NUM_OF_NONCES] <= h5_const + f[m];
-				 h6_out[m+NUM_OF_NONCES] <= h6_const + g[m];
-			    h7_out[m+NUM_OF_NONCES] <= h7_const + h[m];
+			    	h0_out[m+NUM_OF_NONCES] <= h0_const + a[m];
+			    	h1_out[m+NUM_OF_NONCES] <= h1_const + b[m];
+				h2_out[m+NUM_OF_NONCES] <= h2_const + c[m];
+				h3_out[m+NUM_OF_NONCES] <= h3_const + d[m];
+				h4_out[m+NUM_OF_NONCES] <= h4_const + e[m];
+				h5_out[m+NUM_OF_NONCES] <= h5_const + f[m];
+				h6_out[m+NUM_OF_NONCES] <= h6_const + g[m];
+			    	h7_out[m+NUM_OF_NONCES] <= h7_const + h[m];
 			 end
 			 
 			 // If nonce 0 to 7 iteration completed then go ot PHASE2_BLOCK
@@ -378,35 +372,35 @@ begin
 			else begin
 			   i <= 0;
 			   state <= WRITE;
-		   end
+		   	end
 		
 		end
-    end
+    		end
 	 end
 				
 	WRITE: begin
 	   if (i <= 15) begin 
 		// Write h0_out[0], h0_out[1], h0_out[2] to h0_out[15] to testbench memory
-			i <= i + 1;
-			offset <= i;
-			cur_we <= 1'b1;
-			cur_addr <= output_addr;
-			cur_write_data <= (i == 0) ? h0_out[0]:
-			(i == 1) ? h0_out[1]:
-			(i == 2) ? h0_out[2]:
-			(i == 3) ? h0_out[3]:
-			(i == 4) ? h0_out[4]:
-			(i == 5) ? h0_out[5]:
-			(i == 6) ? h0_out[6]:
-			(i == 7) ? h0_out[7]:
-			(i == 8) ? h0_out[8]:
-			(i == 9) ? h0_out[9]:
-			(i == 10) ? h0_out[10]:
-			(i == 11) ? h0_out[11]:
-			(i == 12) ? h0_out[12]:
-			(i == 13) ? h0_out[13]:
-			(i == 14) ? h0_out[14]: h0_out[15];
-	    state <= WRITE;
+		i <= i + 1;
+		offset <= i;
+		cur_we <= 1'b1;
+		cur_addr <= output_addr;
+		cur_write_data <= (i == 0) ? h0_out[0]:
+		(i == 1) ? h0_out[1]:
+		(i == 2) ? h0_out[2]:
+		(i == 3) ? h0_out[3]:
+		(i == 4) ? h0_out[4]:
+		(i == 5) ? h0_out[5]:
+		(i == 6) ? h0_out[6]:
+		(i == 7) ? h0_out[7]:
+		(i == 8) ? h0_out[8]:
+		(i == 9) ? h0_out[9]:
+		(i == 10) ? h0_out[10]:
+		(i == 11) ? h0_out[11]:
+		(i == 12) ? h0_out[12]:
+		(i == 13) ? h0_out[13]:
+		(i == 14) ? h0_out[14]: h0_out[15];
+	    	state <= WRITE;
 	   end else begin
 		state <= IDLE;
 	   end
