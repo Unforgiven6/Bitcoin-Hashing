@@ -50,7 +50,7 @@ In a serial implementation, the hash function (SHA-256) is applied one step at a
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/75cce849-5faa-44e0-826f-4159b2cb3ac7" />
-</p>!
+</p>
 
 In a parallel implementation, multiple instances of the hash function are computed simultaneously. This can be done using hardware (e.g., ASICs, GPUs, or FPGAs) or software threads running in parallel on multicore processors. To Perform 16 SHA256 operations in parallel, 16 copies of SHA256 logic is required and this will consume more logic within FPGA.
 
