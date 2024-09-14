@@ -30,7 +30,7 @@ A blockchain is a _chain of digital data blocks_.
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/7bf4330b-bc34-498b-b7e5-b82e59952965" />
-</p>!
+</p>
 
 In a serial implementation, the hash function (SHA-256) is applied one step at a time. The process happens in sequential order, and there’s no overlap or simultaneous processing of different parts of the hash computation.
 
