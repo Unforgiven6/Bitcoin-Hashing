@@ -28,7 +28,9 @@ A blockchain is a _chain of digital data blocks_.
 ## <br>**Types of implementations:**<br/>
 ### **Serial Implementation**
 
-![Screenshot 2024-09-12 224151](https://github.com/user-attachments/assets/7bf4330b-bc34-498b-b7e5-b82e59952965)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/7bf4330b-bc34-498b-b7e5-b82e59952965" />
+</p>!
 
 In a serial implementation, the hash function (SHA-256) is applied one step at a time. The process happens in sequential order, and there’s no overlap or simultaneous processing of different parts of the hash computation.
 
@@ -46,7 +48,9 @@ In a serial implementation, the hash function (SHA-256) is applied one step at a
 
 ### **Parallel Implementation**
 
-![Screenshot 2024-09-12 224855](https://github.com/user-attachments/assets/75cce849-5faa-44e0-826f-4159b2cb3ac7)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/75cce849-5faa-44e0-826f-4159b2cb3ac7" />
+</p>!
 
 In a parallel implementation, multiple instances of the hash function are computed simultaneously. This can be done using hardware (e.g., ASICs, GPUs, or FPGAs) or software threads running in parallel on multicore processors. To Perform 16 SHA256 operations in parallel, 16 copies of SHA256 logic is required and this will consume more logic within FPGA.
 
